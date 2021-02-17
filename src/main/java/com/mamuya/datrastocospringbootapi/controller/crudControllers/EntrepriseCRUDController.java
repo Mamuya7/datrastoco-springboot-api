@@ -1,6 +1,7 @@
 package com.mamuya.datrastocospringbootapi.controller.crudControllers;
 
 import com.mamuya.datrastocospringbootapi.controller.CRUDController;
+import com.mamuya.datrastocospringbootapi.service.EntrepriseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

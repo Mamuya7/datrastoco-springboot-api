@@ -2,6 +2,7 @@ package com.mamuya.datrastocospringbootapi.service.serviceImpl;
 
 import com.mamuya.datrastocospringbootapi.entities.Entreprise;
 import com.mamuya.datrastocospringbootapi.repository.EntrepriseRepository;
+import com.mamuya.datrastocospringbootapi.service.EntrepriseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
