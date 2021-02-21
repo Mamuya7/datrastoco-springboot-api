@@ -9,7 +9,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -23,22 +25,35 @@ public class AuthUserDetailsService implements UserDetailsService {
         this.authUserDetailsRepository = authUserDetailsRepository;
     }
 
+    @Transactional
+    public User findByUsername(String username){
+        Optional<User> optionalUser = authUserDetailsRepository.findByUsername(username);
+        return optionalUser.orElse(null);
+    }
+
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
 
-        User user = authUserDetailsRepository.findByUsername(s);
+        User user = this.findByUsername(s);
 
-        Set<SimpleGrantedAuthority> authorities = user.getRole()
-                        .getPermissions()
-                        .stream()
-                                                        .map(p -> new SimpleGrantedAuthority(p.getEntity() + ":" + p.getType()))
-                        .collect(Collectors.toSet());
+        Set<SimpleGrantedAuthority> authorities = null;
 
-                authorities.add(
-                        new SimpleGrantedAuthority(
-                                "ROLE_" + user.getRole().getName()
-                        )
-                );
+        if(user.getRole() != null){
+
+            authorities = user.getRole()
+                    .getPermissions()
+                    .stream()
+                    .map(p -> new SimpleGrantedAuthority(
+                            p.getEntity() + ":" + p.getType())
+                    )
+                    .collect(Collectors.toSet());
+
+            authorities.add(
+                    new SimpleGrantedAuthority(
+                            "ROLE_" + user.getRole().getName()
+                    )
+            );
+        }
 
         return new AuthUserDetails(
                 user.getUserName(),

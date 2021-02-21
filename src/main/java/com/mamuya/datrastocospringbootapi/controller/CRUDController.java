@@ -1,19 +1,20 @@
 package com.mamuya.datrastocospringbootapi.controller;
 
+import com.mamuya.datrastocospringbootapi.utility.Response;
 import org.springframework.http.ResponseEntity;
 
 import java.util.LinkedHashMap;
 
-public interface CRUDController {
+public interface CRUDController<T> {
 
-    ResponseEntity<LinkedHashMap<String, Object>> create(LinkedHashMap<String, Object> request);
+    ResponseEntity<Response> create(T request);
 
-    ResponseEntity<LinkedHashMap<String, Object>> readOne(Integer id);
+    ResponseEntity<Response> readOne(Integer id);
 
-    ResponseEntity<LinkedHashMap<String, Object>> readAll();
+    ResponseEntity<Response> readAll();
 
-    ResponseEntity<LinkedHashMap<String, Object>> update(Integer id, LinkedHashMap<String, Object> request);
+    ResponseEntity<Response> update(Integer id, T request);
 
-    ResponseEntity<LinkedHashMap<String, Object>> delete(Integer id);
+    ResponseEntity<Response> delete(Integer id);
 
 }

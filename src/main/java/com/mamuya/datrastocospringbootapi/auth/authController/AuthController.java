@@ -16,8 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.LinkedHashMap;
+
 @RestController
-@RequestMapping("/login")
 public class AuthController {
 
     private AuthenticationManager authenticationManager;
@@ -31,21 +32,30 @@ public class AuthController {
         this.jwtTokenUtil = jwtTokenUtil;
     }
 
-    @PostMapping
-    public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest authRequest) throws Exception{
+    @PostMapping("/login")
+    public ResponseEntity<LinkedHashMap<String, Object>> login(@RequestBody AuthRequest authRequest) throws Exception{
+
+        LinkedHashMap<String, Object> response = new LinkedHashMap<>();
+
         try{
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword())
             );
         }catch(BadCredentialsException e){
-                throw new Exception("Incorrect Username or Password ", e);
+//            throw new Exception("Incorrect Username or Password ", e);
+            response.put("message", "Incorrect Username or Password ");
+
+            return new ResponseEntity(response, HttpStatus.BAD_REQUEST);
         }
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.getUsername());
 
         String jwstoken = jwtTokenUtil.generateToken(userDetails);
 
-        return new ResponseEntity(new AuthResponse(jwstoken), HttpStatus.OK );
+        response.put("message", "Login Successfull");
+        response.put("data", new AuthResponse(jwstoken));
+
+        return new ResponseEntity(response, HttpStatus.OK );
     }
 
 }

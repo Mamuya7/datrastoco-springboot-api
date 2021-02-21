@@ -16,7 +16,7 @@ import java.util.Map;
 @Component
 public class JwtUtil {
 
-    private String SECRET_KEY = "datrastocokey";
+    private String SECRET_KEY = "datrastocokeydatrastocokeydatrastocokeydatrastocokey";
 
     String extractUsername(String token){
         return extractClaims(token, Claims::getSubject);
