@@ -12,7 +12,7 @@ import lombok.ToString;
 @ToString
 public class UserDTO implements DTOValidation<User>{
 
-    private int id;
+    private int id = -1;
     private String fname;
     private String lname;
     private String uname;
@@ -57,8 +57,9 @@ public class UserDTO implements DTOValidation<User>{
 
         User user = new User();
 
-        if(fname == null)
-            return null;
+        if(hasValid(id)){
+            user.setId(id);
+        }
 
         user.setFirstName(fname);
         user.setLastName(lname);
@@ -98,5 +99,10 @@ public class UserDTO implements DTOValidation<User>{
     @Override
     public boolean hasValid(String item) {
         return (!(item == null) && !(item.trim().length() == 0));
+    }
+
+    @Override
+    public boolean hasValid(Integer item) {
+        return item >= 1;
     }
 }

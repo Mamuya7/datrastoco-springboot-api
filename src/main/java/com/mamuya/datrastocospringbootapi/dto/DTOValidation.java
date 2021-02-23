@@ -10,4 +10,7 @@ public interface DTOValidation<T> {
     T updateEntity(T entity);
 
     boolean hasValid(String item);
+
+    boolean hasValid(Integer item);
+
 }
