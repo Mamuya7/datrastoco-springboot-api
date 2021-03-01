@@ -13,14 +13,15 @@ import lombok.ToString;
 public class PurchaseDTO implements DTOValidation<Purchase> {
 
     private int id = -1;
-    private StockDTO stockDTO;
+    private StockDTO stock;
     private double quantity = -1;
     private double amount = -1;
     private String payment;
+    private boolean quantityChanged = false;
 
     public PurchaseDTO(Purchase purchase) {
         setId(purchase.getId());
-        setStockDTO(new StockDTO(purchase.getStock()));
+        setStock(new StockDTO(purchase.getStock()));
         setQuantity(purchase.getQuantity());
         setAmount(purchase.getAmount());
         setPayment(purchase.getPayment());
@@ -30,7 +31,7 @@ public class PurchaseDTO implements DTOValidation<Purchase> {
     public boolean hasAllValidMappings() {
 
         return (
-                hasValid(stockDTO)
+                hasValid(stock)
                     && hasValid(quantity)
                     && hasValid(amount)
                     && hasValid(payment)
@@ -40,7 +41,7 @@ public class PurchaseDTO implements DTOValidation<Purchase> {
     @Override
     public boolean hasAnyValidMappings() {
         return (
-                hasValid(stockDTO)
+                hasValid(stock)
                     || hasValid(quantity)
                     || hasValid(amount)
                     || hasValid(payment)
@@ -55,7 +56,7 @@ public class PurchaseDTO implements DTOValidation<Purchase> {
             purchase.setId(id);
         }
 
-        purchase.setStock(stockDTO.createEntity());
+        purchase.setStock(stock.createEntity());
         purchase.setQuantity(quantity);
         purchase.setAmount(amount);
         purchase.setPayment(payment);
@@ -65,12 +66,18 @@ public class PurchaseDTO implements DTOValidation<Purchase> {
     @Override
     public Purchase updateEntity(Purchase purchase) {
 
-        if (hasValid(stockDTO)){
-            purchase.setStock(stockDTO.createEntity());
+        if (hasValid(stock)){
+            purchase.setStock(stock.createEntity());
         }
 
         if(hasValid(quantity)){
+            double q1 = purchase.getStock().getQuantity();
+
+            purchase.getStock().setQuantity(q1 - purchase.getQuantity() + quantity);
+
             purchase.setQuantity(quantity);
+
+            setQuantityChanged(true);
         }
 
         if (hasValid(amount)){

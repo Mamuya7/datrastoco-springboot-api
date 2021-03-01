@@ -13,14 +13,15 @@ import lombok.ToString;
 public class SaleDTO implements DTOValidation<Sale> {
 
     private int id = -1;
-    private StockDTO stockDTO;
+    private StockDTO stock;
     private double quantity = -1;
     private double amount = -1;
     private String payment;
+    private boolean quantityChanged = false;
 
     public SaleDTO(Sale sale) {
         setId(sale.getId());
-        setStockDTO(new StockDTO(sale.getStock()));
+        setStock(new StockDTO(sale.getStock()));
         setQuantity(sale.getQuantity());
         setAmount(sale.getAmount());
         setPayment(sale.getPayment());
@@ -30,7 +31,7 @@ public class SaleDTO implements DTOValidation<Sale> {
     public boolean hasAllValidMappings() {
 
         return (
-                hasValid(stockDTO)
+                hasValid(stock)
                         && hasValid(quantity)
                         && hasValid(amount)
                         && hasValid(payment)
@@ -40,7 +41,7 @@ public class SaleDTO implements DTOValidation<Sale> {
     @Override
     public boolean hasAnyValidMappings() {
         return (
-                hasValid(stockDTO)
+                hasValid(stock)
                         || hasValid(quantity)
                         || hasValid(amount)
                         || hasValid(payment)
@@ -56,7 +57,7 @@ public class SaleDTO implements DTOValidation<Sale> {
             sale.setId(id);
         }
 
-        sale.setStock(stockDTO.createEntity());
+        sale.setStock(stock.createEntity());
         sale.setQuantity(quantity);
         sale.setAmount(amount);
         sale.setPayment(payment);
@@ -67,12 +68,18 @@ public class SaleDTO implements DTOValidation<Sale> {
     public Sale updateEntity(Sale sale) {
 
 
-        if (hasValid(stockDTO)){
-            sale.setStock(stockDTO.createEntity());
+        if (hasValid(stock)){
+            sale.setStock(stock.createEntity());
         }
 
         if(hasValid(quantity)){
+            double q1 = sale.getStock().getQuantity();
+
+            sale.getStock().setQuantity(q1 + sale.getQuantity() - quantity);
+
             sale.setQuantity(quantity);
+
+            setQuantityChanged(true);
         }
 
         if (hasValid(amount)){

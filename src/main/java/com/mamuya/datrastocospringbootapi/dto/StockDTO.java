@@ -30,7 +30,6 @@ public class StockDTO implements DTOValidation<Stock> {
 
     @Override
     public boolean hasAllValidMappings() {
-
         return (
                 hasValid(entreprise)
                     && hasValid(product)

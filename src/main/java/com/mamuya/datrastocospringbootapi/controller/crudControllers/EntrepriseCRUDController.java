@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,7 +30,7 @@ public class EntrepriseCRUDController implements CRUDController<EntrepriseDTO>, 
     public ResponseEntity<Response> create(@RequestBody EntrepriseDTO request) {
 
         if(!request.hasAllValidMappings()){
-            return new ResponseEntity(ObjectRequestMismatch, HttpStatus.CONFLICT);
+            return new ResponseEntity<>(ObjectRequestMismatch, HttpStatus.CONFLICT);
         }
 
         Entreprise entreprise = request.createEntity();
@@ -40,7 +39,7 @@ public class EntrepriseCRUDController implements CRUDController<EntrepriseDTO>, 
 
         SuccessfulRequestExecution.setData(entreprise);
 
-        return new ResponseEntity(SuccessfulRequestExecution, HttpStatus.OK);
+        return new ResponseEntity<>(SuccessfulRequestExecution, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -49,13 +48,13 @@ public class EntrepriseCRUDController implements CRUDController<EntrepriseDTO>, 
         Entreprise entreprise = entrepriseService.findById(id);
 
         if(entreprise == null){
-            return new ResponseEntity(ObjectForIdentityNotFound, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(ObjectForIdentityNotFound, HttpStatus.NOT_FOUND);
         }
 
         EntrepriseDTO entrepriseDTO = new EntrepriseDTO(entreprise);
         SuccessfulRequestExecution.setData(entrepriseDTO);
 
-        return new ResponseEntity(SuccessfulRequestExecution, HttpStatus.OK);
+        return new ResponseEntity<>(SuccessfulRequestExecution, HttpStatus.OK);
     }
 
     @GetMapping
@@ -68,7 +67,7 @@ public class EntrepriseCRUDController implements CRUDController<EntrepriseDTO>, 
                                     .collect(Collectors.toList());
 
         SuccessfulRequestExecution.setData(dtos);
-        return new ResponseEntity(SuccessfulRequestExecution, HttpStatus.OK);
+        return new ResponseEntity<>(SuccessfulRequestExecution, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
@@ -77,20 +76,20 @@ public class EntrepriseCRUDController implements CRUDController<EntrepriseDTO>, 
         Entreprise entreprise = entrepriseService.findById(id);
 
         if(entreprise == null){
-            return new ResponseEntity(ObjectForIdentityNotFound, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(ObjectForIdentityNotFound, HttpStatus.NOT_FOUND);
         }
 
         if(!request.hasAnyValidMappings()){
-            return new ResponseEntity(ObjectRequestMismatch, HttpStatus.CONFLICT);
+            return new ResponseEntity<>(ObjectRequestMismatch, HttpStatus.CONFLICT);
         }
 
         request.updateEntity(entreprise);
 
         entreprise = entrepriseService.save(entreprise);
 
-        SuccessfulRequestExecution.setData(entreprise);
+        SuccessfulRequestExecution.setData(new EntrepriseDTO(entreprise));
 
-        return new ResponseEntity(SuccessfulRequestExecution, HttpStatus.OK);
+        return new ResponseEntity<>(SuccessfulRequestExecution, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
@@ -99,12 +98,12 @@ public class EntrepriseCRUDController implements CRUDController<EntrepriseDTO>, 
         Entreprise entreprise = entrepriseService.findById(id);
 
         if(entreprise == null){
-            return new ResponseEntity(ObjectForIdentityNotFound, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(ObjectForIdentityNotFound, HttpStatus.NOT_FOUND);
         }
 
         entrepriseService.deleteById(id);
         SuccessfulRequestExecution.setData(null);
 
-        return new ResponseEntity(SuccessfulRequestExecution, HttpStatus.OK);
+        return new ResponseEntity<>(SuccessfulRequestExecution, HttpStatus.OK);
     }
 }

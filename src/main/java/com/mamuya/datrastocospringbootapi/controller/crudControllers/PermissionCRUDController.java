@@ -2,7 +2,6 @@ package com.mamuya.datrastocospringbootapi.controller.crudControllers;
 
 import com.mamuya.datrastocospringbootapi.controller.CRUDController;
 import com.mamuya.datrastocospringbootapi.dto.PermissionDTO;
-import com.mamuya.datrastocospringbootapi.entities.Entreprise;
 import com.mamuya.datrastocospringbootapi.entities.Permission;
 import com.mamuya.datrastocospringbootapi.service.PermissionService;
 import com.mamuya.datrastocospringbootapi.utility.Response;
@@ -12,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,8 +29,8 @@ public class PermissionCRUDController implements CRUDController<PermissionDTO>, 
     @Override
     public ResponseEntity<Response> create(@RequestBody PermissionDTO request) {
 
-        if(request.hasAllValidMappings()){
-            return new ResponseEntity(ObjectRequestMismatch, HttpStatus.CONFLICT);
+        if(!request.hasAllValidMappings()){
+            return new ResponseEntity<>(ObjectRequestMismatch, HttpStatus.CONFLICT);
         }
 
         Permission permission = request.createEntity();
@@ -50,11 +48,11 @@ public class PermissionCRUDController implements CRUDController<PermissionDTO>, 
         Permission permission = permissionService.findById(id);
 
         if(permission == null){
-            return  new ResponseEntity(ObjectForIdentityNotFound, HttpStatus.NOT_FOUND);
+            return  new ResponseEntity<>(ObjectForIdentityNotFound, HttpStatus.NOT_FOUND);
         }
 
         SuccessfulRequestExecution.setData(permission);
-        return new ResponseEntity(SuccessfulRequestExecution, HttpStatus.OK);
+        return new ResponseEntity<>(SuccessfulRequestExecution, HttpStatus.OK);
     }
 
     @GetMapping
@@ -68,7 +66,7 @@ public class PermissionCRUDController implements CRUDController<PermissionDTO>, 
                                 .collect(Collectors.toList());
 
         SuccessfulRequestExecution.setData(permissionDTOS);
-        return new ResponseEntity(SuccessfulRequestExecution, HttpStatus.OK);
+        return new ResponseEntity<>(SuccessfulRequestExecution, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
@@ -78,11 +76,11 @@ public class PermissionCRUDController implements CRUDController<PermissionDTO>, 
         Permission permission = permissionService.findById(id);
 
         if(permission == null){
-            return  new ResponseEntity(ObjectForIdentityNotFound, HttpStatus.NOT_FOUND);
+            return  new ResponseEntity<>(ObjectForIdentityNotFound, HttpStatus.NOT_FOUND);
         }
 
-        if(request.hasAnyValidMappings()){
-            return new ResponseEntity(ObjectRequestMismatch, HttpStatus.CONFLICT);
+        if(!request.hasAnyValidMappings()){
+            return new ResponseEntity<>(ObjectRequestMismatch, HttpStatus.CONFLICT);
         }
 
         request.updateEntity(permission);
@@ -90,7 +88,7 @@ public class PermissionCRUDController implements CRUDController<PermissionDTO>, 
         permissionService.save(permission);
 
         SuccessfulRequestExecution.setData(new PermissionDTO(permission));
-        return new ResponseEntity(SuccessfulRequestExecution, HttpStatus.OK);
+        return new ResponseEntity<>(SuccessfulRequestExecution, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
@@ -100,12 +98,12 @@ public class PermissionCRUDController implements CRUDController<PermissionDTO>, 
         Permission permission = permissionService.findById(id);
 
         if(permission == null){
-            return  new ResponseEntity(ObjectForIdentityNotFound, HttpStatus.NOT_FOUND);
+            return  new ResponseEntity<>(ObjectForIdentityNotFound, HttpStatus.NOT_FOUND);
         }
 
         permissionService.deleteById(id);
 
         SuccessfulRequestExecution.setData(null);
-        return new ResponseEntity(SuccessfulRequestExecution, HttpStatus.OK);
+        return new ResponseEntity<>(SuccessfulRequestExecution, HttpStatus.OK);
     }
 }

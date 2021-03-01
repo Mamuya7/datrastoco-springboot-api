@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,15 +30,16 @@ public class StockBalanceCRUDController implements CRUDController<StockBalanceDT
     public ResponseEntity<Response> create(@RequestBody StockBalanceDTO request) {
 
         if(!request.hasAllValidMappings()){
-            return new ResponseEntity(ObjectRequestMismatch, HttpStatus.CONFLICT);
+            return new ResponseEntity<>(ObjectRequestMismatch, HttpStatus.CONFLICT);
         }
 
         StockBalance stockBalance = request.createEntity();
 
         stockBalance = stockBalanceService.save(stockBalance);
+        stockBalance = stockBalanceService.findById(stockBalance.getId());
 
         SuccessfulRequestExecution.setData(new StockBalanceDTO(stockBalance));
-        return new ResponseEntity(SuccessfulRequestExecution, HttpStatus.OK);
+        return new ResponseEntity<>(SuccessfulRequestExecution, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -48,11 +48,11 @@ public class StockBalanceCRUDController implements CRUDController<StockBalanceDT
         StockBalance stockBalance = stockBalanceService.findById(id);
 
         if(stockBalance == null){
-            return new ResponseEntity(ObjectForIdentityNotFound, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(ObjectForIdentityNotFound, HttpStatus.NOT_FOUND);
         }
 
         SuccessfulRequestExecution.setData(new StockBalanceDTO(stockBalance));
-        return new ResponseEntity(SuccessfulRequestExecution, HttpStatus.OK);
+        return new ResponseEntity<>(SuccessfulRequestExecution, HttpStatus.OK);
     }
 
     @GetMapping
@@ -65,7 +65,7 @@ public class StockBalanceCRUDController implements CRUDController<StockBalanceDT
                 .collect(Collectors.toList());
 
         SuccessfulRequestExecution.setData(stockBalanceDTOS);
-        return new ResponseEntity(SuccessfulRequestExecution, HttpStatus.OK);
+        return new ResponseEntity<>(SuccessfulRequestExecution, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
@@ -75,11 +75,11 @@ public class StockBalanceCRUDController implements CRUDController<StockBalanceDT
         StockBalance stockBalance = stockBalanceService.findById(id);
 
         if(stockBalance == null){
-            return new ResponseEntity(ObjectForIdentityNotFound, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(ObjectForIdentityNotFound, HttpStatus.NOT_FOUND);
         }
 
         if(!request.hasAnyValidMappings()){
-            return new ResponseEntity(ObjectRequestMismatch, HttpStatus.CONFLICT);
+            return new ResponseEntity<>(ObjectRequestMismatch, HttpStatus.CONFLICT);
         }
 
         request.updateEntity(stockBalance);
@@ -87,7 +87,7 @@ public class StockBalanceCRUDController implements CRUDController<StockBalanceDT
         stockBalance = stockBalanceService.save(stockBalance);
 
         SuccessfulRequestExecution.setData(new StockBalanceDTO(stockBalance));
-        return new ResponseEntity(SuccessfulRequestExecution, HttpStatus.OK);
+        return new ResponseEntity<>(SuccessfulRequestExecution, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
@@ -97,12 +97,12 @@ public class StockBalanceCRUDController implements CRUDController<StockBalanceDT
         StockBalance stockBalance = stockBalanceService.findById(id);
 
         if(stockBalance == null){
-            return new ResponseEntity(ObjectForIdentityNotFound, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(ObjectForIdentityNotFound, HttpStatus.NOT_FOUND);
         }
 
         stockBalanceService.deleteById(id);
 
         SuccessfulRequestExecution.setData(null);
-        return new ResponseEntity(SuccessfulRequestExecution, HttpStatus.OK);
+        return new ResponseEntity<>(SuccessfulRequestExecution, HttpStatus.OK);
     }
 }

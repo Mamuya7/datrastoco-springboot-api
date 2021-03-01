@@ -17,6 +17,7 @@ public class PermissionDTO implements DTOValidation<Permission> {
     private String type;
 
     public PermissionDTO(Permission permission) {
+        setId(permission.getId());
         setEntity(permission.getEntity());
         setType(permission.getType());
     }
@@ -67,6 +68,6 @@ public class PermissionDTO implements DTOValidation<Permission> {
 
     @Override
     public boolean hasValid(Integer item) {
-        return item >= 1;
+        return item > 0;
     }
 }

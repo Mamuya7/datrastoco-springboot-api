@@ -13,23 +13,23 @@ import lombok.ToString;
 public class StockBalanceDTO implements DTOValidation<StockBalance> {
 
     private int id = -1;
-    private EntrepriseDTO entrepriseDTO;
-    private double stockBalanceAmount = -1;
+    private EntrepriseDTO entreprise;
+    private double stckBalAmount = -1;
 
     public StockBalanceDTO(StockBalance stockBalance) {
         setId(stockBalance.getId());
-        setEntrepriseDTO(new EntrepriseDTO(stockBalance.getEntreprise()));
-        setStockBalanceAmount(stockBalance.getStockBalanceAmount());
+        setEntreprise(new EntrepriseDTO(stockBalance.getEntreprise()));
+        setStckBalAmount(stockBalance.getStckBalAmount());
     }
 
     @Override
     public boolean hasAllValidMappings() {
-        return (hasValid(entrepriseDTO) && hasValid(stockBalanceAmount));
+        return (hasValid(entreprise) && hasValid(stckBalAmount));
     }
 
     @Override
     public boolean hasAnyValidMappings() {
-        return (hasValid(entrepriseDTO) || hasValid(stockBalanceAmount));
+        return (hasValid(entreprise) || hasValid(stckBalAmount));
     }
 
     @Override
@@ -41,20 +41,20 @@ public class StockBalanceDTO implements DTOValidation<StockBalance> {
             stockBalance.setId(id);
         }
 
-        stockBalance.setEntreprise(entrepriseDTO.createEntity());
-        stockBalance.setStockBalanceAmount(stockBalanceAmount);
+        stockBalance.setEntreprise(entreprise.createEntity());
+        stockBalance.setStckBalAmount(stckBalAmount);
         return stockBalance;
     }
 
     @Override
     public StockBalance updateEntity(StockBalance stockBalance) {
 
-        if(hasValid(entrepriseDTO)){
-            stockBalance.setEntreprise(entrepriseDTO.createEntity());
+        if(hasValid(entreprise)){
+            stockBalance.setEntreprise(entreprise.createEntity());
         }
 
-        if(hasValid(stockBalanceAmount)){
-            stockBalance.setStockBalanceAmount(stockBalanceAmount);
+        if(hasValid(stckBalAmount)){
+            stockBalance.setStckBalAmount(stckBalAmount);
         }
 
         return stockBalance;

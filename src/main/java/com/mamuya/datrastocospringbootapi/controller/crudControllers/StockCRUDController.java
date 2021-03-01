@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,15 +28,16 @@ public class StockCRUDController implements CRUDController<StockDTO>, ServerResp
     public ResponseEntity<Response> create(@RequestBody StockDTO request) {
 
         if(!request.hasAllValidMappings()){
-            return new ResponseEntity(ObjectRequestMismatch, HttpStatus.CONFLICT);
+            return new ResponseEntity<>(ObjectRequestMismatch, HttpStatus.CONFLICT);
         }
 
         Stock stock = request.createEntity();
 
         stock = stockService.save(stock);
+        stock = stockService.findById(stock.getId());
 
         SuccessfulRequestExecution.setData(new StockDTO(stock));
-        return new ResponseEntity(SuccessfulRequestExecution, HttpStatus.OK);
+        return new ResponseEntity<>(SuccessfulRequestExecution, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -46,11 +46,11 @@ public class StockCRUDController implements CRUDController<StockDTO>, ServerResp
         Stock stock = stockService.findById(id);
 
         if(stock == null){
-            return new ResponseEntity(ObjectForIdentityNotFound, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(ObjectForIdentityNotFound, HttpStatus.NOT_FOUND);
         }
 
         SuccessfulRequestExecution.setData(new StockDTO(stock));
-        return new ResponseEntity(SuccessfulRequestExecution, HttpStatus.OK);
+        return new ResponseEntity<>(SuccessfulRequestExecution, HttpStatus.OK);
     }
 
     @GetMapping
@@ -63,7 +63,7 @@ public class StockCRUDController implements CRUDController<StockDTO>, ServerResp
                 .collect(Collectors.toList());
 
         SuccessfulRequestExecution.setData(stockDTOS);
-        return new ResponseEntity(SuccessfulRequestExecution, HttpStatus.OK);
+        return new ResponseEntity<>(SuccessfulRequestExecution, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
@@ -73,11 +73,11 @@ public class StockCRUDController implements CRUDController<StockDTO>, ServerResp
         Stock stock = stockService.findById(id);
 
         if(stock == null){
-            return new ResponseEntity(ObjectForIdentityNotFound, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(ObjectForIdentityNotFound, HttpStatus.NOT_FOUND);
         }
 
         if(!request.hasAnyValidMappings()){
-            return new ResponseEntity(ObjectRequestMismatch, HttpStatus.CONFLICT);
+            return new ResponseEntity<>(ObjectRequestMismatch, HttpStatus.CONFLICT);
         }
 
         request.updateEntity(stock);
@@ -85,7 +85,7 @@ public class StockCRUDController implements CRUDController<StockDTO>, ServerResp
         stock = stockService.save(stock);
 
         SuccessfulRequestExecution.setData(new StockDTO(stock));
-        return new ResponseEntity(SuccessfulRequestExecution, HttpStatus.OK);
+        return new ResponseEntity<>(SuccessfulRequestExecution, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
@@ -95,12 +95,12 @@ public class StockCRUDController implements CRUDController<StockDTO>, ServerResp
         Stock stock = stockService.findById(id);
 
         if(stock == null){
-            return new ResponseEntity(ObjectForIdentityNotFound, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(ObjectForIdentityNotFound, HttpStatus.NOT_FOUND);
         }
 
         stockService.deleteById(id);
 
         SuccessfulRequestExecution.setData(null);
-        return new ResponseEntity(SuccessfulRequestExecution, HttpStatus.OK);
+        return new ResponseEntity<>(SuccessfulRequestExecution, HttpStatus.OK);
     }
 }

@@ -26,7 +26,7 @@ public class StockBalance {
     private Entreprise entreprise;
 
     @Column(name = "stock_balance_amount", nullable = false)
-    private double stockBalanceAmount = 0.0;
+    private double stckBalAmount = 0.0;
 
     @Column(name = "created_at", nullable = false)
     private String createdAt = DateTimeUtility.getCurrentDateTime();
